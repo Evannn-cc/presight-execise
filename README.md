@@ -1,5 +1,52 @@
 # Presight Frontend Exercise
 
+## Getting Started
+
+### Prerequisites
+
+- Node.js 22+ (better-sqlite3 needs Node 20–26)
+- npm 9+ (workspaces support)
+
+### Local setup
+
+```bash
+npm install        # installs root, client, and server workspace dependencies
+npm run seed       # creates server/data/app.db and seeds 10,000 users (skips if already seeded)
+npm run dev        # starts the API on :3001 and the Vite client on :5173
+```
+
+Open http://localhost:5173. The Vite dev server proxies `/api` to the Express server, so no extra configuration is needed.
+
+To re-seed from scratch, delete `server/data/` and run `npm run seed` again. Seeding uses a fixed faker seed (42), so the dataset is deterministic.
+
+### Tests
+
+```bash
+npm test           # server API tests (vitest + supertest against an in-memory SQLite DB)
+```
+
+The tests cover filter semantics (hobbies AND / nationalities OR), LIKE-wildcard escaping, deterministic sort with the id tie-breaker, pagination without duplicates or gaps, top-20 facet counts under active filters, and parameter validation.
+
+### Running with Docker Compose
+
+```bash
+docker compose up --build
+```
+
+Open http://localhost:3000. A single container builds both workspaces, serves the client statics from Express, and seeds the SQLite database into a named volume on first start (restarts reuse the existing data). `docker compose down -v` removes the volume for a fresh seed.
+
+### Architecture notes
+
+- **Stack**: React 19 + TanStack Query/Virtual + Tailwind 4 (client); Express 5 + better-sqlite3 (server); npm workspaces monorepo.
+- **Data model**: normalized SQLite schema (`users`, `hobbies`, `user_hobbies`) so the hobbies-AND filter and facet counts are plain indexed `GROUP BY` queries.
+- **API**: `GET /api/users` (search, `nationality`/`hobby` repeated params, whitelisted sort + `id` tie-breaker, offset pagination with `total`/`hasMore`), `GET /api/hobbies/top`, `GET /api/nationalities/top` — the facet endpoints share the exact WHERE builder with the list endpoint, so top-20 counts always reflect the active filter state.
+- **Facet semantics**: per the spec, top-20 counts apply _all_ active filters, including the facet's own selections — for hobbies (AND) each count is a drill-down preview of "results if you add this hobby". Selected values are always rendered in the sidebar even when they drop out of the top 20, so they stay removable.
+- **URL state**: the query string (`search`, `hobby`, `nationality`, `sortBy`, `sortDir`) is the single source of truth; reloading or sharing a URL restores the view.
+
+---
+
+## Original Brief
+
 Build a small full-stack user directory application. The goal is to evaluate how you design a searchable, filterable, paginated UI backed by persisted data and clear API boundaries.
 
 The application should include:
