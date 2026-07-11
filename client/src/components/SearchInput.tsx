@@ -1,19 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDebouncedCallback } from '../hooks/useDebouncedCallback';
 
 interface SearchInputProps {
   value: string;
+  /** Increments when filters are cleared externally; cancels any pending draft. */
+  clearSignal: number;
   onChange: (value: string) => void;
 }
 
-export default function SearchInput({ value, onChange }: SearchInputProps) {
+export default function SearchInput({ value, clearSignal, onChange }: SearchInputProps) {
   const [draft, setDraft] = useState(value);
-  const debouncedChange = useDebouncedCallback(onChange, 300);
+  const lastEmitted = useRef(value);
+  const debouncedChange = useDebouncedCallback((next: string) => {
+    lastEmitted.current = next;
+    onChange(next);
+  }, 300);
 
-  // Keep the input in sync when the URL changes from elsewhere (clear all, back/forward).
+  // Sync the input when the URL changes from elsewhere (clear all, back/forward)
+  // and cancel any pending keystroke so it can't resurrect the old value.
+  // Echoes of our own debounced commit are ignored to avoid clobbering typing.
   useEffect(() => {
-    setDraft(value);
-  }, [value]);
+    if (value !== lastEmitted.current) {
+      debouncedChange.cancel();
+      lastEmitted.current = value;
+      setDraft(value);
+    }
+  }, [value, debouncedChange]);
+
+  // "Clear all" must also drop a draft that was never committed to the URL
+  // (the value prop doesn't change in that case, so the sync above can't see it).
+  useEffect(() => {
+    debouncedChange.cancel();
+    setDraft(lastEmitted.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clearSignal]);
 
   return (
     <div className="relative flex-1">

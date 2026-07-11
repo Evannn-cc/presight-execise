@@ -14,6 +14,7 @@ export default function DirectoryPage() {
   const {
     filters,
     hasActiveFilters,
+    clearSignal,
     setSearch,
     toggleHobby,
     toggleNationality,
@@ -75,7 +76,7 @@ export default function DirectoryPage() {
                 </span>
               )}
             </button>
-            <SearchInput value={filters.search} onChange={setSearch} />
+            <SearchInput value={filters.search} clearSignal={clearSignal} onChange={setSearch} />
             <SortControls sortBy={filters.sortBy} sortDir={filters.sortDir} onChange={setSort} />
           </div>
           <ActiveFilterChips
