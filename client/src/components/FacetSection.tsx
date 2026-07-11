@@ -17,13 +17,19 @@ export default function FacetSection({
   isLoading,
   isError,
 }: FacetSectionProps) {
-  // Selected values stay visible (and removable) even when they drop out of
-  // the top-20 for the current result set.
-  const entryValues = new Set((entries ?? []).map((e) => e.value));
+  // Selected values always float to the top of the list — including values
+  // that dropped out of the top-20 for the current result set (count 0), so
+  // they stay visible and removable.
+  const entryList = entries ?? [];
+  const entryValues = new Set(entryList.map((e) => e.value));
   const pinned = selected
     .filter((value) => !entryValues.has(value))
     .map((value) => ({ value, count: 0 }));
-  const rows = [...pinned, ...(entries ?? [])];
+  const rows = [
+    ...pinned,
+    ...entryList.filter((e) => selected.includes(e.value)),
+    ...entryList.filter((e) => !selected.includes(e.value)),
+  ];
 
   return (
     <section>
