@@ -20,10 +20,20 @@ interface BuiltFilter {
   params: unknown[];
 }
 
+interface FilterOptions {
+  /**
+   * The nationality facet excludes its own selection: nationalities are OR
+   * semantics, so self-filtering would hide every unselected value and make
+   * multi-select impossible. The hobby facet keeps its selection applied —
+   * with AND semantics each count is a drill-down preview of "results if you
+   * add this hobby".
+   */
+  excludeNationalities?: boolean;
+}
+
 // Shared by the list and both facet queries, so top-20 counts always reflect
-// the active text filter and selected filters (per the exercise spec, the
-// facet's own selection is included too — counts are drill-down previews).
-function buildUserFilter(filters: Filters): BuiltFilter {
+// the active text filter and selected filters.
+function buildUserFilter(filters: Filters, options: FilterOptions = {}): BuiltFilter {
   const clauses: string[] = [];
   const params: unknown[] = [];
 
@@ -35,7 +45,7 @@ function buildUserFilter(filters: Filters): BuiltFilter {
     params.push(like, like);
   }
 
-  if (filters.nationalities.length > 0) {
+  if (filters.nationalities.length > 0 && !options.excludeNationalities) {
     clauses.push(`u.nationality IN (${placeholders(filters.nationalities.length)})`);
     params.push(...filters.nationalities);
   }
@@ -136,7 +146,7 @@ export function topHobbies(db: Database, filters: Filters): FacetEntry[] {
 }
 
 export function topNationalities(db: Database, filters: Filters): FacetEntry[] {
-  const { where, params } = buildUserFilter(filters);
+  const { where, params } = buildUserFilter(filters, { excludeNationalities: true });
 
   return db
     .prepare(

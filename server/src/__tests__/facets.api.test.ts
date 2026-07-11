@@ -117,13 +117,34 @@ describe('GET /api/nationalities/top', () => {
     ]);
   });
 
-  it('includes the selected nationality itself: only selected values remain', async () => {
+  it('excludes its own selection (OR semantics): other nationalities stay discoverable', async () => {
     const res = await request(app).get('/api/nationalities/top?nationality=German').expect(200);
-    expect(res.body.data).toEqual([{ value: 'German', count: 2 }]);
+    // The nationality clause is dropped for this facet, so all values remain
+    // clickable for building a multi-nationality OR filter.
+    expect(res.body.data).toEqual([
+      { value: 'American', count: 4 },
+      { value: 'British', count: 2 },
+      { value: 'German', count: 2 },
+      { value: 'Chinese', count: 1 },
+      { value: 'French', count: 1 },
+      { value: 'Korean', count: 1 },
+      { value: 'Vietnamese', count: 1 },
+    ]);
+  });
+
+  it('still applies the other filters when its own selection is excluded', async () => {
+    const res = await request(app)
+      .get('/api/nationalities/top?nationality=German&hobby=Cooking')
+      .expect(200);
+    // Only the hobby filter applies: Cooking users are ids 7, 9, 11.
+    expect(res.body.data).toEqual([
+      { value: 'German', count: 2 },
+      { value: 'American', count: 1 },
+    ]);
   });
 
   it('returns an empty list when no users match', async () => {
-    const res = await request(app).get('/api/nationalities/top?nationality=Martian').expect(200);
+    const res = await request(app).get('/api/nationalities/top?search=zzzzzz').expect(200);
     expect(res.body.data).toEqual([]);
   });
 });
