@@ -1,5 +1,7 @@
 # Presight Frontend Exercise
 
+![User directory with hobby and nationality filters applied](docs/screenshot.png)
+
 ## Getting Started
 
 ### Prerequisites
