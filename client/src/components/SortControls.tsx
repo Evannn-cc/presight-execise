@@ -16,14 +16,17 @@ interface SortControlsProps {
 export default function SortControls({ sortBy, sortDir, onChange }: SortControlsProps) {
   return (
     <div className="flex shrink-0 items-center gap-2">
-      <label htmlFor="sort-field" className="text-sm text-slate-500">
-        Sort by
+      <label
+        htmlFor="sort-field"
+        className="hidden font-mono text-[11px] uppercase tracking-[0.08em] text-muted sm:inline"
+      >
+        Sort
       </label>
       <select
         id="sort-field"
         value={sortBy}
         onChange={(e) => onChange(e.target.value as SortField, sortDir)}
-        className="rounded-lg border border-slate-300 bg-white py-2 pl-3 pr-8 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        className="rounded-[3px] border border-ink/25 bg-white py-2 pl-3 pr-8 text-sm text-ink focus:border-cobalt focus:outline-none focus:ring-2 focus:ring-cobalt/25"
       >
         {SORT_FIELDS.map((field) => (
           <option key={field} value={field}>
@@ -36,7 +39,7 @@ export default function SortControls({ sortBy, sortDir, onChange }: SortControls
         onClick={() => onChange(sortBy, sortDir === 'asc' ? 'desc' : 'asc')}
         aria-label={`Sort ${sortDir === 'asc' ? 'ascending' : 'descending'}; click to reverse`}
         title={sortDir === 'asc' ? 'Ascending' : 'Descending'}
-        className="rounded-lg border border-slate-300 bg-white p-2 text-slate-600 hover:bg-slate-50 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        className="rounded-[3px] border border-ink/25 bg-white p-2 text-ink/70 hover:bg-paper focus:border-cobalt focus:outline-none focus:ring-2 focus:ring-cobalt/25"
       >
         <svg
           className="size-4"

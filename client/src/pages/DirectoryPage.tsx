@@ -43,22 +43,26 @@ export default function DirectoryPage() {
   );
 
   return (
-    <div className="flex h-dvh flex-col bg-slate-50">
-      <header className="z-10 border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3">
+    <div className="flex h-dvh flex-col bg-paper font-sans text-ink">
+      {/* passport-cover rule */}
+      <div className="h-1 shrink-0 bg-cobalt" aria-hidden />
+      <header className="z-10 border-b-2 border-ink/80 bg-white">
+        <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-3">
           <div className="flex items-baseline justify-between gap-2">
-            <h1 className="text-lg font-bold text-slate-900">User Directory</h1>
+            <h1 className="font-display text-xl font-bold uppercase tracking-[0.04em]">
+              User Directory
+            </h1>
             {total !== undefined && (
-              <span className="text-sm text-slate-500">
-                {total.toLocaleString()} {total === 1 ? 'user' : 'users'}
+              <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
+                {total.toLocaleString()} {total === 1 ? 'record' : 'records'}
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-2">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
-              className="relative shrink-0 rounded-lg border border-slate-300 bg-white p-2 text-slate-600 hover:bg-slate-50 lg:hidden"
+              className="relative shrink-0 rounded-[3px] border border-ink/25 bg-white p-2 text-ink/70 hover:bg-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-cobalt lg:hidden"
               aria-label="Open filters"
             >
               <svg
@@ -71,7 +75,7 @@ export default function DirectoryPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M7 12h10m-7 6h4" />
               </svg>
               {activeFilterCount > 0 && (
-                <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white">
+                <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-cobalt font-mono text-[10px] font-bold text-white">
                   {activeFilterCount}
                 </span>
               )}
@@ -89,26 +93,28 @@ export default function DirectoryPage() {
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-6xl flex-1 overflow-hidden">
-        <aside className="hidden w-72 shrink-0 overflow-y-auto border-r border-slate-200 bg-white px-4 py-4 lg:block">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 overflow-hidden">
+        <aside className="hidden w-72 shrink-0 space-y-6 overflow-y-auto border-r border-line bg-white px-4 py-4 lg:block">
           {sidebar}
         </aside>
 
         {sidebarOpen && (
           <div className="fixed inset-0 z-20 lg:hidden" role="dialog" aria-label="Filters">
             <div
-              className="absolute inset-0 bg-black/30"
+              className="absolute inset-0 bg-ink/40"
               onClick={() => setSidebarOpen(false)}
               aria-hidden
             />
             <div className="absolute inset-y-0 left-0 flex w-80 max-w-[85vw] flex-col overflow-y-auto bg-white px-4 py-4 shadow-xl">
               <div className="mb-3 flex items-center justify-between">
-                <h2 className="font-semibold text-slate-900">Filters</h2>
+                <h2 className="font-display font-bold uppercase tracking-[0.08em] text-ink">
+                  Filters
+                </h2>
                 <button
                   type="button"
                   onClick={() => setSidebarOpen(false)}
                   aria-label="Close filters"
-                  className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"
+                  className="rounded-[3px] p-1.5 text-muted hover:bg-paper"
                 >
                   <svg
                     className="size-5"

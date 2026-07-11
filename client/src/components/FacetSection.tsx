@@ -27,19 +27,21 @@ export default function FacetSection({
 
   return (
     <section>
-      <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{title}</h2>
+      <h2 className="mb-2 border-b border-line pb-1.5 font-display text-xs font-bold uppercase tracking-[0.12em] text-ink/70">
+        {title}
+      </h2>
       {isLoading ? (
-        <div className="space-y-2" aria-label={`Loading ${title}`}>
+        <div className="space-y-1.5" aria-label={`Loading ${title}`}>
           {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="h-7 animate-pulse rounded-md bg-slate-100" />
+            <div key={i} className="h-7 animate-pulse rounded-[2px] bg-line/50" />
           ))}
         </div>
       ) : isError ? (
-        <p className="text-sm text-red-600">Failed to load {title.toLowerCase()}.</p>
+        <p className="text-sm text-ink/70">Couldn't load {title.toLowerCase()}.</p>
       ) : rows.length === 0 ? (
-        <p className="text-sm text-slate-400">No {title.toLowerCase()} in the current results.</p>
+        <p className="text-sm text-muted">No {title.toLowerCase()} in the current results.</p>
       ) : (
-        <ul className="space-y-0.5">
+        <ul>
           {rows.map((entry) => {
             const isSelected = selected.includes(entry.value);
             return (
@@ -48,29 +50,16 @@ export default function FacetSection({
                   type="button"
                   onClick={() => onToggle(entry.value)}
                   aria-pressed={isSelected}
-                  className={`flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors ${
+                  className={`flex w-full items-center justify-between gap-2 border-l-2 px-2 py-1.5 text-left text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-cobalt ${
                     isSelected
-                      ? 'bg-indigo-50 font-medium text-indigo-700 hover:bg-indigo-100'
-                      : 'text-slate-700 hover:bg-slate-100'
+                      ? 'border-cobalt bg-cobalt/[0.07] font-medium text-cobalt hover:bg-cobalt/[0.12]'
+                      : 'border-transparent text-ink/85 hover:bg-ink/[0.04]'
                   }`}
                 >
-                  <span className="flex min-w-0 items-center gap-1.5">
-                    {isSelected && (
-                      <svg
-                        className="size-3.5 shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={3}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m5 13 4 4L19 7" />
-                      </svg>
-                    )}
-                    <span className="truncate">{entry.value}</span>
-                  </span>
+                  <span className="truncate">{entry.value}</span>
                   <span
-                    className={`shrink-0 text-xs tabular-nums ${
-                      isSelected ? 'text-indigo-500' : 'text-slate-400'
+                    className={`shrink-0 font-mono text-[11px] tabular-nums ${
+                      isSelected ? 'text-cobalt/80' : 'text-muted'
                     }`}
                   >
                     {entry.count}

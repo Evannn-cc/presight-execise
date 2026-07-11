@@ -8,13 +8,13 @@ interface ActiveFilterChipsProps {
 
 function Chip({ label, kind, onRemove }: { label: string; kind: string; onRemove: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 py-1 pl-3 pr-1.5 text-xs font-medium text-indigo-800">
+    <span className="inline-flex items-center gap-1 rounded-[2px] border border-cobalt/50 bg-cobalt/[0.06] py-0.5 pl-2 pr-1 font-mono text-[11px] uppercase tracking-[0.06em] text-cobalt">
       {label}
       <button
         type="button"
         onClick={onRemove}
         aria-label={`Remove ${kind} filter: ${label}`}
-        className="rounded-full p-0.5 hover:bg-indigo-200"
+        className="rounded-[2px] p-0.5 hover:bg-cobalt/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cobalt"
       >
         <svg
           className="size-3"
@@ -50,7 +50,7 @@ export default function ActiveFilterChips({
       <button
         type="button"
         onClick={onClearAll}
-        className="ml-1 text-xs font-medium text-slate-500 underline-offset-2 hover:text-slate-700 hover:underline"
+        className="ml-1 text-xs text-muted underline decoration-line underline-offset-2 hover:text-ink"
       >
         Clear all
       </button>

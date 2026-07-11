@@ -11,14 +11,14 @@ export default function HobbyChips({ hobbies }: { hobbies: string[] }) {
       {visible.map((hobby) => (
         <span
           key={hobby}
-          className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600"
+          className="rounded-[2px] border border-line bg-white px-2 py-0.5 text-xs text-ink/80"
         >
           {hobby}
         </span>
       ))}
       {remaining > 0 && (
         <span
-          className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-500"
+          className="rounded-[2px] bg-paper px-1.5 py-0.5 font-mono text-[11px] text-muted"
           title={hobbies.slice(VISIBLE_COUNT).join(', ')}
         >
           +{remaining}

@@ -70,8 +70,12 @@ export default function UserList({
             >
               <div className="pb-3">
                 {isLoaderRow ? (
-                  <div className="flex justify-center py-4" aria-label="Loading more users">
-                    <div className="size-6 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-600" />
+                  <div
+                    className="flex items-center justify-center gap-2 py-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted"
+                    aria-label="Loading more users"
+                  >
+                    <div className="size-4 animate-spin rounded-full border-2 border-line border-t-cobalt motion-reduce:animate-none" />
+                    Loading
                   </div>
                 ) : (
                   <UserCard user={users[item.index]} />

@@ -36,8 +36,8 @@ export default function SearchInput({ value, clearSignal, onChange }: SearchInpu
   }, [clearSignal]);
 
   return (
-    <div className="relative flex-1">
-      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
+    <div className="relative flex-1 lg:max-w-lg">
+      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">
         <svg
           className="size-4"
           fill="none"
@@ -59,9 +59,9 @@ export default function SearchInput({ value, clearSignal, onChange }: SearchInpu
           setDraft(e.target.value);
           debouncedChange(e.target.value);
         }}
-        placeholder="Search by first or last name…"
+        placeholder="Search by name"
         aria-label="Search users by first or last name"
-        className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        className="w-full rounded-[3px] border border-ink/25 bg-white py-2 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-cobalt focus:outline-none focus:ring-2 focus:ring-cobalt/25"
       />
     </div>
   );

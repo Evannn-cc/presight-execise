@@ -37,9 +37,7 @@ function main(): void {
       const lastName = faker.person.lastName();
       const age = faker.number.int({ min: 18, max: 90 });
       const nationality = faker.helpers.weightedArrayElement(NATIONALITIES);
-      const avatar = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(
-        `${firstName}-${id}`,
-      )}`;
+      const avatar = `https://i.pravatar.cc/150?u=${encodeURIComponent(`${firstName}-${id}`)}`;
 
       insertUser.run(id, avatar, firstName, lastName, age, nationality);
 
