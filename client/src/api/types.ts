@@ -1,40 +1,22 @@
-export interface User {
-  id: number;
-  avatar: string;
-  first_name: string;
-  last_name: string;
-  age: number;
-  nationality: string;
-  hobbies: string[];
-}
+// The API contract types are shared with the server (type-only imports, erased
+// at build time) so client and server can't silently drift apart.
+import type { FacetEntry, SortDir, SortField } from '../../../server/src/types';
 
-export interface PaginationMeta {
-  offset: number;
-  limit: number;
-  total: number;
-  hasMore: boolean;
-}
-
-export interface PaginatedUsers {
-  data: User[];
-  pagination: PaginationMeta;
-}
-
-export interface FacetEntry {
-  value: string;
-  count: number;
-}
+export type {
+  UserDTO as User,
+  PaginationMeta,
+  PaginatedUsers,
+  FacetEntry,
+  SortField,
+  SortDir,
+} from '../../../server/src/types';
+export { SORT_FIELDS, SORT_DIRS } from '../../../server/src/types';
 
 export interface FacetResponse {
   data: FacetEntry[];
 }
 
-export const SORT_FIELDS = ['first_name', 'last_name', 'age', 'nationality'] as const;
-export type SortField = (typeof SORT_FIELDS)[number];
-
-export const SORT_DIRS = ['asc', 'desc'] as const;
-export type SortDir = (typeof SORT_DIRS)[number];
-
+/** Client view state: the server-side filters plus the active sort. */
 export interface Filters {
   search: string;
   hobbies: string[];
