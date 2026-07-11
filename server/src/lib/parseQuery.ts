@@ -10,20 +10,24 @@ type RawQuery = Record<string, unknown>;
 function toStringArray(value: unknown): string[] {
   if (value === undefined) return [];
   const values = Array.isArray(value) ? value : [value];
-  return values.map((v) => {
+  const parsed = values.map((v) => {
     if (typeof v !== 'string' || v.length === 0) {
       throw new BadRequestError('Filter values must be non-empty strings');
     }
     return v;
   });
+  // Dedupe: the hobbies-AND query compares COUNT(DISTINCT ...) with the
+  // selection size, so a duplicated value would make the filter unsatisfiable.
+  return [...new Set(parsed)];
 }
 
 function toInt(value: unknown, name: string, fallback: number): number {
   if (value === undefined) return fallback;
-  if (typeof value !== 'string' || !/^\d+$/.test(value)) {
+  const parsed = typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : NaN;
+  if (!Number.isSafeInteger(parsed)) {
     throw new BadRequestError(`"${name}" must be a non-negative integer`);
   }
-  return Number(value);
+  return parsed;
 }
 
 export function parseFilters(raw: RawQuery): Filters {

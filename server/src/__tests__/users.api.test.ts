@@ -98,6 +98,11 @@ describe('GET /api/users', () => {
     expect(ids(single).sort((a, b) => a - b)).toEqual([1, 2, 4, 8, 9, 11]);
   });
 
+  it('deduplicates repeated filter values instead of making them unsatisfiable', async () => {
+    const res = await request(app).get('/api/users?hobby=Chess&hobby=Chess').expect(200);
+    expect(ids(res).sort((a, b) => a - b)).toEqual([1, 2, 4, 8, 9, 11]);
+  });
+
   it('combines text, nationality, and hobby filters', async () => {
     const res = await request(app)
       .get('/api/users?search=ann&nationality=Chinese&hobby=Chess&hobby=Hiking')
@@ -145,5 +150,7 @@ describe('GET /api/users', () => {
     await request(app).get('/api/users?limit=1000').expect(400);
     await request(app).get('/api/users?offset=-1').expect(400);
     await request(app).get('/api/users?offset=abc').expect(400);
+    // beyond Number.MAX_SAFE_INTEGER: must be a 400, not a SQLite datatype error
+    await request(app).get('/api/users?offset=99999999999999999999999').expect(400);
   });
 });
